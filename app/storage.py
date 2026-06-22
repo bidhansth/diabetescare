@@ -1,5 +1,6 @@
 import os
 import io
+from typing import Optional
 from pathlib import Path
 import boto3
 from botocore.exceptions import ClientError
@@ -55,7 +56,7 @@ def get_local_path(file_key: str) -> Path:
     return Path(get_settings().STORAGE_LOCAL_PATH) / file_key
 
 
-async def save_file(file: UploadFile, file_key: str, bucket: str | None = None) -> int:
+async def save_file(file: UploadFile, file_key: str, bucket: Optional[str] = None) -> int:
     settings = get_settings()
     if settings.STORAGE_BACKEND == "s3":
         s3 = _get_s3_client()
@@ -79,7 +80,7 @@ async def save_file(file: UploadFile, file_key: str, bucket: str | None = None) 
         return size
 
 
-def delete_file(file_key: str, bucket: str | None = None):
+def delete_file(file_key: str, bucket: Optional[str] = None):
     settings = get_settings()
     if settings.STORAGE_BACKEND == "s3":
         s3 = _get_s3_client()
@@ -98,7 +99,7 @@ def delete_file(file_key: str, bucket: str | None = None):
                 parent = parent.parent
 
 
-def get_download_response(file_key: str, filename: str, content_type: str, bucket: str | None = None):
+def get_download_response(file_key: str, filename: str, content_type: str, bucket: Optional[str] = None):
     settings = get_settings()
     if settings.STORAGE_BACKEND == "s3":
         s3 = _get_s3_client()
