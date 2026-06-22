@@ -55,17 +55,18 @@ def get_local_path(file_key: str) -> Path:
     return Path(get_settings().STORAGE_LOCAL_PATH) / file_key
 
 
-async def save_file(file: UploadFile, file_key: str) -> int:
+async def save_file(file: UploadFile, file_key: str, bucket: str | None = None) -> int:
     settings = get_settings()
     if settings.STORAGE_BACKEND == "s3":
         s3 = _get_s3_client()
+        bucket = bucket or settings.S3_BUCKET
         buffer = io.BytesIO()
         size = 0
         while chunk := await file.read(8192):
             buffer.write(chunk)
             size += len(chunk)
         buffer.seek(0)
-        s3.upload_fileobj(buffer, settings.S3_BUCKET, file_key)
+        s3.upload_fileobj(buffer, bucket, file_key)
         return size
     else:
         local_path = get_local_path(file_key)
@@ -78,12 +79,13 @@ async def save_file(file: UploadFile, file_key: str) -> int:
         return size
 
 
-def delete_file(file_key: str):
+def delete_file(file_key: str, bucket: str | None = None):
     settings = get_settings()
     if settings.STORAGE_BACKEND == "s3":
         s3 = _get_s3_client()
+        bucket = bucket or settings.S3_BUCKET
         try:
-            s3.delete_object(Bucket=settings.S3_BUCKET, Key=file_key)
+            s3.delete_object(Bucket=bucket, Key=file_key)
         except ClientError:
             pass
     else:
@@ -96,12 +98,13 @@ def delete_file(file_key: str):
                 parent = parent.parent
 
 
-def get_download_response(file_key: str, filename: str, content_type: str):
+def get_download_response(file_key: str, filename: str, content_type: str, bucket: str | None = None):
     settings = get_settings()
     if settings.STORAGE_BACKEND == "s3":
         s3 = _get_s3_client()
+        bucket = bucket or settings.S3_BUCKET
         try:
-            response = s3.get_object(Bucket=settings.S3_BUCKET, Key=file_key)
+            response = s3.get_object(Bucket=bucket, Key=file_key)
             return StreamingResponse(
                 response["Body"].iter_chunks(),
                 media_type=content_type,

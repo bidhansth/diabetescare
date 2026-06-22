@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Forum - DiabetesCare</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+  <nav class="navbar navbar-dark navbar-expand-sm">
+    <div class="container">
+      <a class="navbar-brand" href="#">DiabetesCare</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navMenu">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item"><a class="nav-link" href="/static/dashboard.html">Dashboard</a></li>
+          <li class="nav-item"><a class="nav-link" href="/static/history.html">History</a></li>
+          <li class="nav-item"><a class="nav-link" href="/static/alerts.html">Alerts</a></li>
+          <li class="nav-item"><a class="nav-link" href="/static/resources.html">Resources</a></li>
+          <li class="nav-item"><a class="nav-link active" href="/static/forum.html">Forum</a></li>
+        </ul>
+        <button class="btn btn-outline-light btn-sm" id="logoutBtn">Logout</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h4 class="mb-0">Forum</h4>
+      <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newPostModal">New Post</button>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-md-4">
+        <select class="form-select" id="topicFilter">
+          <option value="">All Topics</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="loadingPosts" class="text-center py-4">
+      <div class="spinner-border text-primary" role="status"></div>
+    </div>
+    <div id="noPosts" class="text-center py-4 d-none text-muted">No posts yet. Start a discussion!</div>
+    <div id="postsList"></div>
+  </div>
+
+  <!-- New Post Modal -->
+  <div class="modal fade" id="newPostModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">New Post</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="newPostForm">
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Topic</label>
+              <select class="form-select" id="postTopic" required>
+                <option value="">Select a topic</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Title</label>
+              <input type="text" class="form-control" id="postTitle" maxlength="200" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Body</label>
+              <textarea class="form-control" id="postBody" rows="5" required></textarea>
+            </div>
+            <div id="postError" class="alert alert-danger d-none"></div>
+            <button type="submit" class="btn btn-primary w-100" id="submitPostBtn">Post</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>&copy; 2026 DiabetesCare</footer>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/static/js/api.js"></script>
+  <script src="/static/js/forum.js"></script>
+</body>
+</html>

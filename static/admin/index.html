@@ -17,6 +17,9 @@
       <div class="collapse navbar-collapse" id="navMenu">
         <ul class="navbar-nav me-auto">
           <li class="nav-item"><a class="nav-link active" href="#" id="tabResources">Resources</a></li>
+          <li class="nav-item"><a class="nav-link" href="#" id="tabCarousel">Carousel</a></li>
+          <li class="nav-item"><a class="nav-link" href="#" id="tabReports">Reports</a></li>
+          <li class="nav-item"><a class="nav-link" href="#" id="tabTopics">Topics</a></li>
           <li class="nav-item"><a class="nav-link" href="#" id="tabUsers">Users</a></li>
         </ul>
         <button class="btn btn-outline-light btn-sm" id="logoutBtn">Logout</button>
@@ -26,6 +29,8 @@
 
   <div class="container mt-4">
     <div id="storageWarning" class="alert d-none"></div>
+
+    <!-- Resources Section -->
     <div id="resourcesSection">
       <div class="card mb-4">
         <div class="card-header">Upload Resource</div>
@@ -70,6 +75,105 @@
       </div>
     </div>
 
+    <!-- Carousel Section -->
+    <div id="carouselSection" class="d-none">
+      <div class="card mb-4">
+        <div class="card-header">Upload Carousel Slide</div>
+        <div class="card-body">
+          <form id="carouselUploadForm" enctype="multipart/form-data">
+            <div class="row g-3">
+              <div class="col-md-8">
+                <label class="form-label fw-semibold">Caption</label>
+                <input type="text" class="form-control" id="carouselCaption" placeholder="Optional caption">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label fw-semibold">Image (max 10MB)</label>
+                <input type="file" class="form-control" id="carouselFile" accept="image/*" required>
+              </div>
+            </div>
+            <div id="carouselUploadError" class="alert alert-danger d-none mt-2"></div>
+            <button type="submit" class="btn btn-primary mt-3" id="carouselUploadBtn">Upload Slide</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">Carousel Slides</div>
+        <div class="card-body p-0">
+          <div id="loadingCarousel" class="text-center py-4">
+            <div class="spinner-border text-primary" role="status"></div>
+          </div>
+          <div class="d-none" id="carouselTableContainer">
+            <div class="row g-3 p-3" id="carouselGrid"></div>
+          </div>
+          <div id="noCarousel" class="text-center py-4 d-none text-muted">No slides uploaded yet</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reports Section -->
+    <div id="reportsSection" class="d-none">
+      <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <span>Reports</span>
+          <div>
+            <select class="form-select form-select-sm d-inline-block w-auto" id="reportStatusFilter">
+              <option value="">All</option>
+              <option value="pending">Pending</option>
+              <option value="resolved">Resolved</option>
+              <option value="dismissed">Dismissed</option>
+            </select>
+          </div>
+        </div>
+        <div class="card-body p-0">
+          <div id="loadingReports" class="text-center py-4">
+            <div class="spinner-border text-primary" role="status"></div>
+          </div>
+          <div class="table-responsive d-none" id="reportsTableContainer">
+            <table class="table table-hover mb-0">
+              <thead><tr><th>Type</th><th>Reason</th><th>Reported By</th><th>Date</th><th>Status</th><th></th></tr></thead>
+              <tbody id="reportsBody"></tbody>
+            </table>
+          </div>
+          <div id="noReports" class="text-center py-4 d-none text-muted">No reports found</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Topics Section -->
+    <div id="topicsSection" class="d-none">
+      <div class="card mb-4">
+        <div class="card-header">Add Topic</div>
+        <div class="card-body">
+          <form id="topicForm" class="row g-2">
+            <div class="col">
+              <input type="text" class="form-control" id="topicName" placeholder="Topic name" required>
+            </div>
+            <div class="col-auto">
+              <button type="submit" class="btn btn-primary" id="addTopicBtn">Add</button>
+            </div>
+            <div id="topicError" class="alert alert-danger d-none mt-2"></div>
+          </form>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">Topics</div>
+        <div class="card-body p-0">
+          <div id="loadingTopics" class="text-center py-4">
+            <div class="spinner-border text-primary" role="status"></div>
+          </div>
+          <div class="table-responsive d-none" id="topicsTableContainer">
+            <table class="table table-hover mb-0">
+              <thead><tr><th>Name</th><th>Created</th><th></th></tr></thead>
+              <tbody id="topicsBody"></tbody>
+            </table>
+          </div>
+          <div id="noTopics" class="text-center py-4 d-none text-muted">No topics created yet</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Users Section -->
     <div id="usersSection" class="d-none">
       <div class="card">
         <div class="card-header">Users</div>

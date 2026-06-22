@@ -141,6 +141,25 @@ body {
 
 .spinner-border { width: 1.5rem; height: 1.5rem; }
 
+/* ── Carousel ── */
+.carousel-img {
+  height: 420px;
+  object-fit: cover;
+}
+
+.carousel-placeholder {
+  height: 420px;
+  background: linear-gradient(135deg, var(--primary) 0%, #0a3d44 100%);
+}
+
+.carousel {
+  background: #e9ecef;
+}
+
+.carousel-caption h5 {
+  text-shadow: 0 1px 4px rgba(0,0,0,0.6);
+}
+
 footer {
   text-align: center;
   padding: 1.5rem;

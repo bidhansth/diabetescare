@@ -7,7 +7,11 @@ from datetime import datetime, timedelta, timezone
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
-from app.database import create_user, create_entry, create_medication, create_resource, get_resources, get_user_by_email, update_user_role
+from app.database import (
+    create_user, create_entry, create_medication, create_resource,
+    get_resources, get_user_by_email, update_user_role,
+    create_topic, get_topics,
+)
 from app.auth import hash_password
 
 DEMO_EMAIL = "demo@example.com"
@@ -210,6 +214,22 @@ def main():
             print(f"  Created resource: {res_name}")
     else:
         print("  Resources already exist")
+
+    sample_topics = [
+        "Nutrition & Diet",
+        "Medication & Treatment",
+        "Exercise & Fitness",
+        "Blood Sugar Management",
+        "General Discussion",
+    ]
+
+    existing_topics = get_topics()
+    if not existing_topics:
+        for topic_name in sample_topics:
+            create_topic(topic_name)
+            print(f"  Created topic: {topic_name}")
+    else:
+        print("  Topics already exist")
 
     print("Seed complete!")
 

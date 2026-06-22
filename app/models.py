@@ -101,3 +101,73 @@ class ResourceResponse(BaseModel):
     uploadedAt: str
     downloadCount: int
     description: str
+
+
+class TopicCreate(BaseModel):
+    name: str
+
+
+class TopicResponse(BaseModel):
+    topicId: str
+    name: str
+    createdAt: str
+
+
+class PostCreate(BaseModel):
+    title: str
+    body: str
+    topicId: str
+
+
+class PostResponse(BaseModel):
+    postId: str
+    title: str
+    body: str
+    topicId: str
+    topicName: Optional[str] = None
+    authorId: str
+    authorName: str
+    createdAt: str
+    commentCount: int
+
+
+class CommentCreate(BaseModel):
+    body: str
+    parentCommentId: Optional[str] = None
+
+
+class CommentResponse(BaseModel):
+    commentId: str
+    postId: str
+    parentCommentId: Optional[str] = None
+    authorId: str
+    authorName: str
+    body: str
+    createdAt: str
+
+
+class CarouselSlideResponse(BaseModel):
+    slideId: str
+    caption: str
+    imageUrl: str
+    position: int
+    uploadedBy: str
+    uploadedAt: str
+
+
+class ReportCreate(BaseModel):
+    reason: str
+
+
+class ReportResponse(BaseModel):
+    reportId: str
+    targetType: str
+    targetId: str
+    postId: str
+    reportedById: str
+    reportedByName: str
+    reason: str
+    status: str
+    createdAt: str
+    resolvedAt: Optional[str] = None
+    resolvedBy: Optional[str] = None

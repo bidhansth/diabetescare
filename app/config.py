@@ -14,6 +14,7 @@ class Settings:
     STORAGE_LOCAL_PATH: str = os.getenv("STORAGE_LOCAL_PATH", "./local-storage")
     STORAGE_MAX_SIZE: int = 50 * 1024 * 1024
     S3_BUCKET: str = os.getenv("S3_BUCKET", "diabetescare-resources")
+    CAROUSEL_S3_BUCKET: str = os.getenv("CAROUSEL_S3_BUCKET", "diabetescare-carousel")
 
 
 @lru_cache

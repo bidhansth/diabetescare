@@ -135,3 +135,9 @@ const FILE_TYPE_ICONS = {
 function getFileTypeIcon(fileType) {
   return FILE_TYPE_ICONS[fileType] || '📁';
 }
+
+function esc(s) {
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}

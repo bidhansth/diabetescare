@@ -11,6 +11,48 @@ function showError(id, msg) {
   el.classList.remove('d-none');
 }
 
+async function loadCarousel() {
+  try {
+    const slides = await get('/api/carousel');
+    const inner = document.getElementById('carouselInner');
+    const indicators = document.getElementById('carouselIndicators');
+
+    if (!slides || slides.length === 0) return;
+
+    inner.innerHTML = '';
+    indicators.innerHTML = '';
+
+    slides.forEach((slide, idx) => {
+      const indicator = document.createElement('button');
+      indicator.type = 'button';
+      indicator.dataset.bsSlideTo = idx;
+      indicator.className = idx === 0 ? 'active' : '';
+      indicator.setAttribute('aria-label', `Slide ${idx + 1}`);
+      indicators.appendChild(indicator);
+
+      const item = document.createElement('div');
+      item.className = `carousel-item${idx === 0 ? ' active' : ''}`;
+
+      const img = document.createElement('img');
+      img.src = slide.imageUrl;
+      img.className = 'd-block w-100 carousel-img';
+      img.alt = slide.caption || 'DiabetesCare slide';
+      item.appendChild(img);
+
+      if (slide.caption) {
+        const caption = document.createElement('div');
+        caption.className = 'carousel-caption d-none d-md-block';
+        caption.innerHTML = `<h5>${esc(slide.caption)}</h5>`;
+        item.appendChild(caption);
+      }
+
+      inner.appendChild(item);
+    });
+  } catch (err) {
+    // silently ignore carousel load errors
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   const loginForm = document.getElementById('loginForm');
   const signupForm = document.getElementById('signupForm');
@@ -30,6 +72,8 @@ document.addEventListener('DOMContentLoaded', () => {
     window.location.href = '/static/dashboard.html';
     return;
   }
+
+  loadCarousel();
 
   loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
