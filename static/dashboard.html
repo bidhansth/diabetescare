@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - DiabetesCare</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+  <nav class="navbar navbar-dark navbar-expand-sm">
+    <div class="container">
+      <a class="navbar-brand" href="#">DiabetesCare</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navMenu">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item"><a class="nav-link active" href="/static/dashboard.html">Dashboard</a></li>
+          <li class="nav-item"><a class="nav-link" href="/static/history.html">History</a></li>
+          <li class="nav-item"><a class="nav-link" href="/static/alerts.html">Alerts</a></li>
+          <li class="nav-item"><a class="nav-link" href="/static/resources.html">Resources</a></li>
+        </ul>
+        <button class="btn btn-outline-light btn-sm" id="logoutBtn">Logout</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-4">
+    <h4 class="mb-3" id="welcomeMsg">Welcome!</h4>
+
+    <div class="row g-3 mb-4" id="statCards">
+      <div class="col-6 col-md-3">
+        <div class="card stat-card">
+          <div class="stat-value" id="glucoseCount">-</div>
+          <div class="stat-label">Glucose</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="card stat-card">
+          <div class="stat-value" id="mealCount">-</div>
+          <div class="stat-label">Meals</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="card stat-card">
+          <div class="stat-value" id="medicationCount">-</div>
+          <div class="stat-label">Medications</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="card stat-card">
+          <div class="stat-value" id="exerciseCount">-</div>
+          <div class="stat-label">Exercise</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-3 mb-4" id="logButtons">
+      <div class="col-3">
+        <button class="btn w-100 log-btn" data-type="glucose" style="background:#e8f5e9;color:#2e7d32;border:2px solid transparent;padding:1rem 0.5rem;font-weight:600;border-radius:12px;">
+          <div style="font-size:1.6rem;">🩸</div>
+          <div style="font-size:0.8rem;margin-top:2px;">Glucose</div>
+        </button>
+      </div>
+      <div class="col-3">
+        <button class="btn w-100 log-btn" data-type="meal" style="background:#fff3e0;color:#e65100;border:2px solid transparent;padding:1rem 0.5rem;font-weight:600;border-radius:12px;">
+          <div style="font-size:1.6rem;">🍽️</div>
+          <div style="font-size:0.8rem;margin-top:2px;">Meal</div>
+        </button>
+      </div>
+      <div class="col-3">
+        <button class="btn w-100 log-btn" data-type="medication" style="background:#e3f2fd;color:#1565c0;border:2px solid transparent;padding:1rem 0.5rem;font-weight:600;border-radius:12px;">
+          <div style="font-size:1.6rem;">💊</div>
+          <div style="font-size:0.8rem;margin-top:2px;">Medication</div>
+        </button>
+      </div>
+      <div class="col-3">
+        <button class="btn w-100 log-btn" data-type="exercise" style="background:#f3e5f5;color:#6a1b9a;border:2px solid transparent;padding:1rem 0.5rem;font-weight:600;border-radius:12px;">
+          <div style="font-size:1.6rem;">🏃</div>
+          <div style="font-size:0.8rem;margin-top:2px;">Exercise</div>
+        </button>
+      </div>
+    </div>
+
+    <div id="quickForm" class="d-none mb-4">
+      <div class="card border-0 shadow-sm">
+        <div class="card-body" id="quickFormBody">
+          <div class="d-flex align-items-center mb-3" id="formHeader">
+            <span id="selectedTypeIcon" style="font-size:1.4rem;margin-right:8px;"></span>
+            <span class="fw-semibold" id="selectedTypeTitle" style="color:#5f6368;"></span>
+          </div>
+          <form id="entryForm" novalidate>
+            <div class="row g-3 mt-1 d-none" id="medicationField">
+              <div class="col-md-4">
+                <label class="form-label fw-semibold">Medication</label>
+                <div class="input-group">
+                  <select class="form-select" id="medicationSelect"></select>
+                  <button class="btn btn-outline-primary" type="button" id="manageMedsBtn">Manage</button>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <label class="form-label fw-semibold">Quantity</label>
+                <div class="input-group">
+                  <button class="btn btn-outline-secondary" type="button" id="qtyMinus">−</button>
+                  <input type="number" class="form-control text-center" id="qtyInput" value="1" min="0.5" step="0.5" readonly>
+                  <button class="btn btn-outline-secondary" type="button" id="qtyPlus">+</button>
+                </div>
+              </div>
+              <div class="col-md-3 d-flex align-items-end pb-1">
+                <div id="computedDosage" class="fw-semibold text-muted"></div>
+              </div>
+            </div>
+            <div class="row g-3">
+              <div class="col-md-4" id="valueField">
+                <label class="form-label fw-semibold" id="valueLabel">Value</label>
+                <div class="input-group">
+                  <input type="number" step="0.1" min="0.1" class="form-control" id="entryValue">
+                  <span class="input-group-text" id="entryUnitDisplay">mg/dL</span>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label fw-semibold">Date &amp; Time</label>
+                <input type="datetime-local" class="form-control" id="entryTimestamp">
+              </div>
+              <div class="col-md-4 d-flex align-items-end pb-1">
+                <button type="submit" class="btn btn-primary w-100 me-2" id="entrySubmitBtn">Save</button>
+                <button type="button" class="btn btn-outline-secondary" id="cancelBtn" style="white-space:nowrap;">&times;</button>
+              </div>
+            </div>
+            <div class="row g-3 mt-1">
+              <div class="col-12">
+                <label class="form-label fw-semibold">Notes <span class="text-muted" style="font-weight:400;">(optional)</span></label>
+                <input type="text" class="form-control" id="entryNotes" placeholder="Add a note about this entry">
+              </div>
+            </div>
+            <div id="entryError" class="alert alert-danger d-none mt-2"></div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-3 mb-4">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header">Latest Glucose</div>
+          <div class="card-body text-center">
+            <div style="font-size:3rem;font-weight:700;" id="latestGlucose">--</div>
+            <div style="color:#5f6368;" id="latestGlucoseTime"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">Recent Entries</div>
+      <div class="card-body p-0">
+        <div id="loadingEntries" class="text-center py-4">
+          <div class="spinner-border text-primary" role="status"></div>
+        </div>
+        <div class="table-responsive d-none" id="entriesTableContainer">
+          <table class="table table-hover mb-0">
+            <thead><tr><th>Time</th><th>Type</th><th>Value</th><th>Notes</th></tr></thead>
+            <tbody id="entriesBody"></tbody>
+          </table>
+        </div>
+        <div id="noEntries" class="text-center py-4 d-none text-muted">No entries today</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="medicationsModal" tabindex="-1">
+    <div class="modal-dialog modal-md">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">My Medications</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div id="medList" class="mb-3"></div>
+          <hr>
+          <label class="form-label fw-semibold">Add Medication</label>
+          <div class="row g-2">
+            <div class="col-5">
+              <input type="text" class="form-control form-control-sm" id="newMedName" placeholder="Name">
+            </div>
+            <div class="col-4">
+              <input type="text" class="form-control form-control-sm" id="newMedDosage" placeholder="Dosage (e.g. 500mg)">
+            </div>
+            <div class="col-3 d-grid">
+              <button class="btn btn-sm btn-primary" id="addMedBtn">Add</button>
+            </div>
+          </div>
+          <div id="medError" class="alert alert-danger d-none mt-2"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>&copy; 2026 DiabetesCare</footer>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/static/js/api.js"></script>
+  <script src="/static/js/dashboard.js"></script>
+</body>
+</html>

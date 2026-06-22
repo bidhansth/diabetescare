@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>History - DiabetesCare</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+  <nav class="navbar navbar-dark navbar-expand-sm">
+    <div class="container">
+      <a class="navbar-brand" href="#">DiabetesCare</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navMenu">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item"><a class="nav-link" href="/static/dashboard.html">Dashboard</a></li>
+          <li class="nav-item"><a class="nav-link active" href="/static/history.html">History</a></li>
+          <li class="nav-item"><a class="nav-link" href="/static/alerts.html">Alerts</a></li>
+          <li class="nav-item"><a class="nav-link" href="/static/resources.html">Resources</a></li>
+        </ul>
+        <button class="btn btn-outline-light btn-sm" id="logoutBtn">Logout</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-4">
+    <div class="d-flex gap-2 mb-3" id="typeTabs">
+      <a href="/static/history.html?type=glucose" class="btn btn-outline-secondary btn-sm type-tab" data-type="glucose">🩸 Glucose</a>
+      <a href="/static/history.html?type=meal" class="btn btn-outline-secondary btn-sm type-tab" data-type="meal">🍽️ Meal</a>
+      <a href="/static/history.html?type=medication" class="btn btn-outline-secondary btn-sm type-tab" data-type="medication">💊 Medication</a>
+      <a href="/static/history.html?type=exercise" class="btn btn-outline-secondary btn-sm type-tab" data-type="exercise">🏃 Exercise</a>
+    </div>
+
+    <div class="card mb-4 d-none" id="chartCard">
+      <div class="card-header">Glucose Trend</div>
+      <div class="card-body" style="height: 300px; position: relative;">
+        <canvas id="glucoseChart"></canvas>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <span id="pageTitle">Entry History</span>
+        <div>
+          <input type="date" class="form-control form-control-sm d-inline-block w-auto me-2" id="filterFrom">
+          <input type="date" class="form-control form-control-sm d-inline-block w-auto me-2" id="filterTo">
+          <button class="btn btn-sm btn-primary" id="filterBtn">Filter</button>
+        </div>
+      </div>
+      <div class="card-body p-0">
+        <div id="loadingHistory" class="text-center py-4">
+          <div class="spinner-border text-primary" role="status"></div>
+        </div>
+        <div class="table-responsive d-none" id="historyTableContainer">
+          <table class="table table-hover mb-0">
+            <thead><tr><th>Date</th><th>Value</th><th>Notes</th></tr></thead>
+            <tbody id="historyBody"></tbody>
+          </table>
+        </div>
+        <div id="noHistory" class="text-center py-4 d-none text-muted">No entries found</div>
+        <div class="text-center py-3" id="loadMoreContainer">
+          <button class="btn btn-outline-primary btn-sm d-none" id="loadMoreBtn">Load More</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>&copy; 2026 DiabetesCare</footer>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/static/js/api.js"></script>
+  <script src="/static/js/history.js"></script>
+</body>
+</html>

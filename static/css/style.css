@@ -1,0 +1,154 @@
+:root {
+  --primary: #1F6C75;
+  --primary-dark: #015D67;
+  --danger: #dc3545;
+  --warning: #ffc107;
+  --success: #28a745;
+  --bg-light: #D5E4E6;
+  --text-dark: #202124;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg-light);
+  color: var(--text-dark);
+  min-height: 100vh;
+}
+
+.navbar {
+  background: var(--primary) !important;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.navbar-brand {
+  font-weight: 700;
+  font-size: 1.3rem;
+  color: #fff !important;
+}
+
+.navbar .nav-link {
+  color: rgba(255,255,255,0.9) !important;
+}
+
+.navbar .nav-link:hover,
+.navbar .nav-link.active {
+  color: #fff !important;
+}
+
+.container { max-width: 960px; }
+
+.card {
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  transition: box-shadow 0.2s;
+}
+
+.card:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+}
+
+.card-header {
+  background: transparent;
+  border-bottom: 1px solid #e9ecef;
+  font-weight: 600;
+  padding: 1rem 1.25rem;
+}
+
+.stat-card {
+  text-align: center;
+  padding: 1.5rem 1rem;
+}
+
+.stat-card .stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.stat-card .stat-label {
+  font-size: 0.85rem;
+  color: #5f6368;
+  margin-top: 0.25rem;
+}
+
+.stat-card .stat-unit {
+  font-size: 0.9rem;
+  color: #5f6368;
+}
+
+.glucose-normal { color: var(--success); }
+.glucose-borderline { color: var(--warning); }
+.glucose-high { color: var(--danger); }
+.glucose-low { color: var(--danger); }
+
+.btn-primary {
+  background: var(--primary);
+  border-color: var(--primary);
+}
+
+.btn-primary:hover {
+  background: var(--primary-dark);
+  border-color: var(--primary-dark);
+}
+
+.form-control:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 0.2rem rgba(26,115,232,0.15);
+}
+
+.table th {
+  font-weight: 600;
+  color: #5f6368;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.auth-card {
+  max-width: 420px;
+  margin: 4rem auto;
+}
+
+.auth-card .card-body { padding: 2rem; }
+
+.auth-card .nav-tabs .nav-link {
+  color: #5f6368;
+  border: none;
+  font-weight: 500;
+}
+
+.auth-card .nav-tabs .nav-link.active {
+  color: var(--primary);
+  border-bottom: 2px solid var(--primary);
+  background: transparent;
+}
+
+.entry-type-badge {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.badge-glucose { background: #e8f5e9; color: #2e7d32; }
+.badge-meal { background: #fff3e0; color: #e65100; }
+.badge-medication { background: #e3f2fd; color: #1565c0; }
+.badge-exercise { background: #f3e5f5; color: #6a1b9a; }
+
+.spinner-border { width: 1.5rem; height: 1.5rem; }
+
+footer {
+  text-align: center;
+  padding: 1.5rem;
+  color: #5f6368;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 576px) {
+  .stat-card .stat-value { font-size: 1.5rem; }
+  .auth-card { margin: 2rem 1rem; }
+}

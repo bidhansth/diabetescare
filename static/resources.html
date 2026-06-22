@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resources - DiabetesCare</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+  <nav class="navbar navbar-dark navbar-expand-sm">
+    <div class="container">
+      <a class="navbar-brand" href="#">DiabetesCare</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navMenu">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item"><a class="nav-link" href="/static/dashboard.html">Dashboard</a></li>
+          <li class="nav-item"><a class="nav-link" href="/static/history.html">History</a></li>
+          <li class="nav-item"><a class="nav-link" href="/static/alerts.html">Alerts</a></li>
+          <li class="nav-item"><a class="nav-link active" href="/static/resources.html">Resources</a></li>
+        </ul>
+        <button class="btn btn-outline-light btn-sm" id="logoutBtn">Logout</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-4">
+    <div class="card">
+      <div class="card-header">Educational Resources</div>
+      <div class="card-body p-0">
+        <div id="loadingResources" class="text-center py-4">
+          <div class="spinner-border text-primary" role="status"></div>
+        </div>
+        <div class="table-responsive d-none" id="resTableContainer">
+          <table class="table table-hover mb-0">
+            <thead><tr><th></th><th>Name</th><th>Type</th><th>Size</th><th>Uploaded</th><th></th></tr></thead>
+            <tbody id="resBody"></tbody>
+          </table>
+        </div>
+        <div id="noResources" class="text-center py-4 d-none text-muted">No resources available</div>
+      </div>
+    </div>
+  </div>
+
+  <footer>&copy; 2026 DiabetesCare</footer>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/static/js/api.js"></script>
+  <script src="/static/js/resources.js"></script>
+</body>
+</html>
