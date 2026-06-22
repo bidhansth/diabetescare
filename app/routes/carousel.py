@@ -93,7 +93,7 @@ async def upload_carousel_slide(
 
     slide_id = str(uuid.uuid4())
     ext = (file.filename or "image").rsplit(".", 1)[-1] if "." in (file.filename or "") else "jpg"
-    file_key = f"carousel/{slide_id}/{slide_id}.{ext}"
+    file_key = f"carousel/{slide_id}.{ext}"
 
     settings = get_settings()
     bucket = settings.CAROUSEL_S3_BUCKET if settings.STORAGE_BACKEND == "s3" else None

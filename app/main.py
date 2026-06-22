@@ -1,7 +1,7 @@
 import os
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import RedirectResponse
+from fastapi.responses import RedirectResponse, FileResponse
 from app.routes import auth, entries, dashboard, medications, resources, admin, forum, carousel
 
 app = FastAPI(title="DiabetesCare")
@@ -16,6 +16,11 @@ app.include_router(resources.router, prefix="/api/resources")
 app.include_router(admin.router, prefix="/api/admin")
 app.include_router(forum.router, prefix="/api")
 app.include_router(carousel.router, prefix="/api")
+
+
+@app.get("/favicon.ico")
+async def favicon():
+    return FileResponse(os.path.join(_STATIC_DIR, "favicon.ico"))
 
 
 @app.get("/")
