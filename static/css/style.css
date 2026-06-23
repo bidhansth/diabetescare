@@ -152,8 +152,13 @@ body {
   background: linear-gradient(135deg, var(--primary) 0%, #0a3d44 100%);
 }
 
-.carousel {
+/* .carousel {
   background: #e9ecef;
+} */
+
+.carousel-inner {
+  width: 75%;
+  margin: auto;
 }
 
 .carousel-caption h5 {

@@ -146,6 +146,10 @@ class CommentResponse(BaseModel):
     createdAt: str
 
 
+class CarouselReorderRequest(BaseModel):
+    slideIds: list[str]
+
+
 class CarouselSlideResponse(BaseModel):
     slideId: str
     caption: str

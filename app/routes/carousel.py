@@ -1,10 +1,10 @@
 import uuid
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form
 from typing import Optional
-from app.models import CarouselSlideResponse
+from app.models import CarouselSlideResponse, CarouselReorderRequest
 from app.config import get_settings
 from app.database import (
-    create_slide, get_slides, get_slide, delete_slide_from_db,
+    create_slide, get_slides, get_slide, delete_slide_from_db, reorder_slides,
 )
 from app.auth import get_current_admin
 from app.storage import save_file, delete_file, get_download_response
@@ -140,6 +140,15 @@ async def upload_carousel_slide(
         uploadedBy=item.get("uploadedBy", ""),
         uploadedAt=item.get("uploadedAt", ""),
     )
+
+
+@router.patch("/carousel/reorder")
+async def reorder_carousel_slides(
+    body: CarouselReorderRequest,
+    user: dict = Depends(get_current_admin),
+):
+    reorder_slides(body.slideIds)
+    return {"detail": "Slides reordered"}
 
 
 @router.delete("/carousel/{slide_id}")

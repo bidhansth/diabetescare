@@ -473,7 +473,9 @@ def get_slides() -> list[dict]:
         KeyConditionExpression=Key("PK").eq("CAROUSEL"),
         ScanIndexForward=True,
     )
-    return [_from_decimal(i) for i in resp.get("Items", [])]
+    items = [_from_decimal(i) for i in resp.get("Items", [])]
+    items.sort(key=lambda x: x.get("position", 0))
+    return items
 
 
 def get_slide(slide_id: str):
@@ -490,6 +492,21 @@ def delete_slide_from_db(slide_id: str):
     )
     for item in resp.get("Items", []):
         _table().delete_item(Key={"PK": item["PK"], "SK": item["SK"]})
+
+
+def reorder_slides(slide_ids: list[str]):
+    for idx, slide_id in enumerate(slide_ids):
+        new_pos = idx + 1
+        resp = _table().scan(
+            FilterExpression=Attr("SK").begins_with("SLIDE#") & Attr("slideId").eq(slide_id)
+        )
+        for item in resp.get("Items", []):
+            _table().update_item(
+                Key={"PK": item["PK"], "SK": item["SK"]},
+                UpdateExpression="SET #p = :p",
+                ExpressionAttributeNames={"#p": "position"},
+                ExpressionAttributeValues={":p": new_pos},
+            )
 
 
 def resolve_report(report_id: str, resolved_by: str, status: str = "resolved"):

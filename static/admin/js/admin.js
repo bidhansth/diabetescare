@@ -116,16 +116,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
       tableContainer.classList.remove('d-none');
       grid.innerHTML = '';
-      slides.forEach(s => {
+      slides.forEach((s, i) => {
         const col = document.createElement('div');
         col.className = 'col-md-4 col-sm-6';
+        const canUp = i > 0;
+        const canDown = i < slides.length - 1;
         col.innerHTML = `
           <div class="card">
             <img src="${esc(s.imageUrl)}" class="card-img-top" style="height:180px;object-fit:cover;" alt="${esc(s.caption || 'Slide')}">
             <div class="card-body p-2">
               <p class="card-text small mb-1">${esc(s.caption || '(no caption)')}</p>
               <small class="text-muted">Position: ${s.position}</small>
-              <button class="btn btn-sm btn-outline-danger float-end delete-slide-btn" data-id="${s.slideId}">Delete</button>
+              <div class="mt-2">
+                <button class="btn btn-sm btn-outline-secondary move-slide-btn" data-id="${s.slideId}" data-dir="up" ${canUp ? '' : 'disabled'} title="Move up">&uarr;</button>
+                <button class="btn btn-sm btn-outline-secondary move-slide-btn" data-id="${s.slideId}" data-dir="down" ${canDown ? '' : 'disabled'} title="Move down">&darr;</button>
+                <button class="btn btn-sm btn-outline-danger float-end delete-slide-btn" data-id="${s.slideId}">Delete</button>
+              </div>
             </div>
           </div>
         `;
@@ -137,6 +143,25 @@ document.addEventListener('DOMContentLoaded', () => {
           if (!confirm('Delete this slide?')) return;
           try {
             await del(`/api/carousel/${btn.dataset.id}`);
+            loadCarouselSlides();
+          } catch (err) {
+            alert(err.message);
+          }
+        });
+      });
+
+      grid.querySelectorAll('.move-slide-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const id = btn.dataset.id;
+          const dir = btn.dataset.dir;
+          const idx = slides.findIndex(s => s.slideId === id);
+          if (idx === -1) return;
+          const swapIdx = dir === 'up' ? idx - 1 : idx + 1;
+          if (swapIdx < 0 || swapIdx >= slides.length) return;
+          [slides[idx], slides[swapIdx]] = [slides[swapIdx], slides[idx]];
+          const newOrder = slides.map(s => s.slideId);
+          try {
+            await apiRequest('PATCH', '/api/carousel/reorder', { slideIds: newOrder });
             loadCarouselSlides();
           } catch (err) {
             alert(err.message);
