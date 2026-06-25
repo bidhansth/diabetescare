@@ -309,22 +309,15 @@ def create_post(post_id: str, title: str, body: str, topic_id: str,
 
 def get_posts(topic_id: Optional[str] = None, limit: int = 20,
               last_evaluated_key: Optional[dict] = None) -> tuple[list[dict], Optional[dict]]:
-    kwargs = dict(Limit=limit)
+    kwargs = {}
     if last_evaluated_key:
         kwargs["ExclusiveStartKey"] = last_evaluated_key
 
     if topic_id:
-        # Use scan with filter
-        filter_expr = Attr("SK").eq("META")
-        resp = _table().scan(
-            FilterExpression=filter_expr & Attr("topicId").eq(topic_id),
-            **kwargs
-        )
+        filter_expr = Attr("SK").eq("META") & Attr("topicId").eq(topic_id)
+        resp = _table().scan(FilterExpression=filter_expr, **kwargs)
     else:
-        resp = _table().scan(
-            FilterExpression=Attr("SK").eq("META"),
-            **kwargs
-        )
+        resp = _table().scan(FilterExpression=Attr("SK").eq("META"), **kwargs)
 
     items = [_from_decimal(i) for i in resp.get("Items", [])]
     items.sort(key=lambda x: x.get("createdAt", ""), reverse=True)
