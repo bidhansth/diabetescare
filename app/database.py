@@ -30,7 +30,7 @@ def _table():
 
 # ── User operations ──
 
-def create_user(user_id: str, email: str, name: str, password_hash: str, role: str = "user"):
+def create_user(user_id: str, email: str, name: str, password_hash: str, role: str = "user", isActive: bool = True):
     _table().put_item(Item={
         "PK": f"USER#{user_id}",
         "SK": "PROFILE",
@@ -38,6 +38,7 @@ def create_user(user_id: str, email: str, name: str, password_hash: str, role: s
         "name": name,
         "passwordHash": password_hash,
         "role": role,
+        "isActive": isActive,
         "createdAt": datetime.now(timezone.utc).isoformat()
     })
 
@@ -68,6 +69,14 @@ def update_user_role(user_id: str, role: str):
         UpdateExpression="SET #r = :r",
         ExpressionAttributeNames={"#r": "role"},
         ExpressionAttributeValues={":r": role},
+    )
+
+
+def update_user_active_status(user_id: str, isActive: bool):
+    _table().update_item(
+        Key={"PK": f"USER#{user_id}", "SK": "PROFILE"},
+        UpdateExpression="SET isActive = :a",
+        ExpressionAttributeValues={":a": isActive},
     )
 
 

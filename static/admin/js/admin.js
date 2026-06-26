@@ -346,14 +346,19 @@ document.addEventListener('DOMContentLoaded', () => {
       tbody.innerHTML = '';
       users.forEach(u => {
         const isAdmin = u.role === 'admin';
+        const isActive = u.isActive !== false;
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td>${esc(u.name)}</td>
           <td>${esc(u.email)}</td>
           <td><span class="badge ${isAdmin ? 'bg-success' : 'bg-secondary'}">${esc(u.role)}</span></td>
           <td>${formatDate(u.createdAt)}</td>
+          <td><span class="badge ${isActive ? 'bg-success' : 'bg-danger'}">${isActive ? 'Active' : 'Deactivated'}</span></td>
           <td>
-            ${isAdmin ? '' : `<button class="btn btn-sm btn-outline-success promote-btn" data-id="${u.userId}">Promote</button>`}
+            ${isAdmin ? '' : `<button class="btn btn-sm btn-outline-success promote-btn me-1" data-id="${u.userId}">Promote</button>`}
+            ${isAdmin ? '' : `<button class="btn btn-sm ${isActive ? 'btn-outline-warning' : 'btn-outline-success'} toggle-active-btn" data-id="${u.userId}" data-active="${isActive}">
+              ${isActive ? 'Deactivate' : 'Reactivate'}
+            </button>`}
           </td>
         `;
         tbody.appendChild(tr);
@@ -363,6 +368,20 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.addEventListener('click', async () => {
           try {
             await apiRequest('PATCH', `/api/admin/users/${btn.dataset.id}/role`);
+            loadUsers();
+          } catch (err) {
+            alert(err.message);
+          }
+        });
+      });
+
+      tbody.querySelectorAll('.toggle-active-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const isActive = btn.dataset.active === 'true';
+          const action = isActive ? 'deactivate' : 'reactivate';
+          if (!confirm(`Are you sure you want to ${action} this user?`)) return;
+          try {
+            await apiRequest('PATCH', `/api/admin/users/${btn.dataset.id}/toggle-active`);
             loadUsers();
           } catch (err) {
             alert(err.message);

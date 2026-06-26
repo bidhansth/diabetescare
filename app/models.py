@@ -89,6 +89,7 @@ class UserResponse(BaseModel):
     name: str
     email: str
     role: str
+    isActive: bool = True
     createdAt: str
 
 

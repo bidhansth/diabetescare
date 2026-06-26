@@ -26,6 +26,8 @@ async def login(body: LoginRequest):
         raise HTTPException(status_code=401, detail="Invalid email or password")
     if not verify_password(body.password, user["passwordHash"]):
         raise HTTPException(status_code=401, detail="Invalid email or password")
+    if not user.get("isActive", True):
+        raise HTTPException(status_code=401, detail="Your account has been deactivated. Please contact an administrator.")
     role = user.get("role", "user")
     token = create_token(user["PK"].replace("USER#", ""), user["email"], role=role)
     return AuthResponse(

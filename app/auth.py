@@ -48,6 +48,8 @@ async def get_current_user(authorization: str = Header(...)):
     user = get_user_by_id(user_id)
     if not user:
         raise HTTPException(status_code=401, detail="User not found")
+    if not user.get("isActive", True):
+        raise HTTPException(status_code=401, detail="Account deactivated. Please contact an administrator.")
     return user
 
 
