@@ -8,8 +8,8 @@ AWS_REGION="us-east-1"
 DYNAMODB_TABLE="DiabetesCare"
 JWT_SECRET="66ljXZ43xGvaQx+yqZd43XDf2NO40HX3VL7e2GRk4ac="
 STORAGE_BACKEND="s3"
-S3_BUCKET="diabetescare-resource0622-484504929783-us-east-1-an"
-CAROUSEL_S3_BUCKET="diabetescare-carousel0622-484504929783-us-east-1-an"
+S3_BUCKET="diabetescare-resource-484504929783-us-east-1-an"
+CAROUSEL_S3_BUCKET="diabetescare-carousel-484504929783-us-east-1-an"
 
 exec > /var/log/diabetescare-userdata.log 2>&1
 
