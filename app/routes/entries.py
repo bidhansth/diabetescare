@@ -3,12 +3,10 @@ from fastapi.responses import JSONResponse
 from typing import Optional
 import uuid
 import json
-import base64
 import boto3
 from datetime import datetime, timezone
 from app.models import EntryCreate, EntryResponse
-from app.database import create_entry, get_entries, get_alerts, get_medication, get_entries_for_month
-from app.report import build_monthly_pdf
+from app.database import create_entry, get_entries, get_alerts, get_medication
 from app.config import get_settings
 from app.auth import get_current_user
 
@@ -92,14 +90,13 @@ async def list_alerts(user: dict = Depends(get_current_user)):
 def export_pdf(user: dict = Depends(get_current_user)):
     """Generate the current month's health report as a PDF.
 
-    When PDF_EXPORT_LAMBDA is configured (production) the work is handed off to
-    the S3-backed report Lambda: we POST a job request, the Lambda writes the
-    PDF to PDF_REPORTS_S3_BUCKET and returns a presigned download URL, and this
-    endpoint streams that JSON back so the browser can download the file.
+    The PDF is always produced by the S3-backed report Lambda
+    (`PDF_EXPORT_LAMBDA`): the FastAPI app invokes it synchronously, the Lambda
+    writes the PDF to `PDF_REPORTS_S3_BUCKET` and returns a presigned download
+    URL, and that JSON is returned to the browser so it downloads the file.
 
-    When PDF_EXPORT_LAMBDA is empty (local dev) the FastAPI app builds the PDF
-    in-process and returns it as a data: URL in the same JSON shape, so the
-    browser downloads it identically — no AWS Lambda or S3 required.
+    Export is Lambda-only by design (no local/in-process fallback), so if
+    `PDF_EXPORT_LAMBDA` is not configured the endpoint responds 503.
     """
     user_id = user["PK"].replace("USER#", "")
 
@@ -140,23 +137,8 @@ def export_pdf(user: dict = Depends(get_current_user)):
             }
         )
 
-    entries = get_entries_for_month(user_id, month_start, month_end)
-    pdf_bytes = build_monthly_pdf(
-        entries,
-        month_label,
-        user_name=user.get("name", ""),
-        start_iso=month_start,
-        end_iso=month_end,
-    )
-    filename = f"diabetescare-report-{month_label}.pdf"
-    # Local fallback: no S3/Lambda here, so return the same JSON shape as
-    # production but with a data: URL (the local analog of the presigned URL).
-    # The frontend downloads `data.downloadUrl` identically in both modes.
-    data_url = "data:application/pdf;base64," + base64.b64encode(pdf_bytes).decode("ascii")
-    return JSONResponse(
-        content={
-            "downloadUrl": data_url,
-            "filename": filename,
-            "createdAt": datetime.now(timezone.utc).isoformat(),
-        }
+    # Lambda-only export: no local fallback is permitted.
+    raise HTTPException(
+        status_code=503,
+        detail="PDF export service is unavailable. Please contact support.",
     )

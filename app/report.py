@@ -1,9 +1,7 @@
-"""Shared monthly PDF report builder.
+"""Monthly PDF report builder for the report-generation Lambda.
 
-Reused by both the EC2 FastAPI local fallback and the report-generation
-Lambda (the Lambda vendors this module in its deployment zip). It depends
-only on `reportlab` and the standard library, so it is cheap to ship to
-Lambda.
+Depends only on `reportlab` and the standard library, so it ships cheaply in
+the Lambda deployment zip (see lambdas/export-service/deploy-lambda.sh).
 """
 
 import io

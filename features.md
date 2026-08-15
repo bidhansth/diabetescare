@@ -162,7 +162,7 @@
 - The request is authenticated by JWT (Bearer token); the FastAPI route computes the current month range in UTC and synchronously invokes the report Lambda via `lambda:InvokeFunction` (RequestResponse)
 - The Lambda queries DynamoDB (full `LastEvaluatedKey` pagination) for every `ENTRY#` in the month, renders a PDF with `reportlab` (summary stats + per-type tables, with glucose values color-coded green/yellow/red), uploads it to the `diabetescare-reports` S3 bucket, and returns a 1-hour presigned download URL
 - The browser opens the presigned URL immediately, so the file downloads right away without polling or email
-- Local-dev fallback: when `PDF_EXPORT_LAMBDA` is unset, the FastAPI app builds the PDF in-process (same shared `app.report` module) and streams it straight to the browser
+- Export is Lambda-only: when `PDF_EXPORT_LAMBDA` is not set, the route responds `503` instead of falling back to local generation
 
 ### PDF Storage (S3)
 - Exported PDFs are stored in a dedicated, non-public S3 bucket (`diabetescare-reports-484504929783-us-east-1-an`), organized as `reports/{userId}/{requestId}.pdf`
