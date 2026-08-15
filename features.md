@@ -157,11 +157,18 @@
 - SNS sends an email alert to the user
 - The same alert is also enqueued to SQS for an audit trail
 
-### CSV Export Service (Lambda)
-- From the dashboard or history page, users can click "Export" to generate a CSV report
-- The Export Service queries DynamoDB for the user's entries
-- It generates a CSV file with columns: Timestamp, Type, Value, Unit, Notes
-- The file is uploaded to S3 and the user gets a pre-signed download link (valid for 1 hour)
+### PDF Export Service (Lambda)
+- From the history page, users click "Export PDF (this month)" to generate a PDF report of all their current-month data
+- The request is authenticated by JWT (Bearer token); the FastAPI route computes the current month range in UTC and synchronously invokes the report Lambda via `lambda:InvokeFunction` (RequestResponse)
+- The Lambda queries DynamoDB (full `LastEvaluatedKey` pagination) for every `ENTRY#` in the month, renders a PDF with `reportlab` (summary stats + per-type tables, with glucose values color-coded green/yellow/red), uploads it to the `diabetescare-reports` S3 bucket, and returns a 1-hour presigned download URL
+- The browser opens the presigned URL immediately, so the file downloads right away without polling or email
+- Local-dev fallback: when `PDF_EXPORT_LAMBDA` is unset, the FastAPI app builds the PDF in-process (same shared `app.report` module) and streams it straight to the browser
+
+### PDF Storage (S3)
+- Exported PDFs are stored in a dedicated, non-public S3 bucket (`diabetescare-reports-484504929783-us-east-1-an`), organized as `reports/{userId}/{requestId}.pdf`
+- Objects carry `Content-Disposition: attachment` so they download with the correct filename
+- Downloads use a temporary (1-hour) presigned URL; the bucket is not publicly accessible
+- Encryption is enabled at rest
 
 ### Notifications (SNS)
 - An SNS topic called `diabetescare-alerts` handles all alert notifications
@@ -202,11 +209,11 @@
 |---------|-------------|-------|
 | EC2 | Runs the main FastAPI application server | Implemented |
 | DynamoDB | Stores all user data, entries, forum content, and resources | Implemented |
-| Lambda | Runs microservices for alert notifications and CSV export | Future |
+| Lambda | Runs the PDF monthly report export (sync-invoked from EC2) | Implemented |
 | API Gateway | Routes requests from EC2 to Lambda functions | Future |
 | SNS | Sends email notifications for out-of-range alerts | Future |
 | SQS | Queues alert messages for asynchronous audit processing | Future |
-| S3 | Stores exported CSV files and supports resource/carousel storage | Implemented (storage backend) / Future (exports) |
+| S3 | Stores educational/carousel uploads and exported monthly PDFs | Implemented (storage + reports) |
 | CloudWatch | Metrics dashboard, logs, and alarms for all services | Future |
 | X-Ray | Distributed tracing across all services | Future |
 | IAM | Manages permissions and roles for all AWS services | Implemented |

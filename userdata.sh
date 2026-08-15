@@ -10,6 +10,10 @@ JWT_SECRET="66ljXZ43xGvaQx+yqZd43XDf2NO40HX3VL7e2GRk4ac="
 STORAGE_BACKEND="s3"
 S3_BUCKET="diabetescare-resource-484504929783-us-east-1-an"
 CAROUSEL_S3_BUCKET="diabetescare-carousel-484504929783-us-east-1-an"
+PDF_EXPORT_LAMBDA="diabetescare-export"
+PDF_REPORTS_S3_BUCKET="diabetescare-reports-484504929783-us-east-1-an"
+export PDF_EXPORT_LAMBDA
+export PDF_REPORTS_S3_BUCKET
 
 exec > /var/log/diabetescare-userdata.log 2>&1
 
@@ -42,6 +46,8 @@ Environment="STORAGE_BACKEND=$STORAGE_BACKEND"
 Environment="JWT_SECRET=$JWT_SECRET"
 Environment="S3_BUCKET=$S3_BUCKET"
 Environment="CAROUSEL_S3_BUCKET=$CAROUSEL_S3_BUCKET"
+Environment="PDF_EXPORT_LAMBDA=$PDF_EXPORT_LAMBDA"
+Environment="PDF_REPORTS_S3_BUCKET=$PDF_REPORTS_S3_BUCKET"
 ExecStart=/usr/bin/python3 -m uvicorn app.main:app --host 0.0.0.0 --port 8000
 Restart=always
 RestartSec=5

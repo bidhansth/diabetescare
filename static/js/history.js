@@ -157,5 +157,29 @@ document.addEventListener('DOMContentLoaded', async () => {
     loadHistory(true);
   });
 
+  const exportBtn = document.getElementById('exportPdfBtn');
+  const exportStatus = document.getElementById('exportStatus');
+  exportBtn.addEventListener('click', async () => {
+    exportBtn.disabled = true;
+    const oldLabel = exportBtn.innerHTML;
+    exportBtn.innerHTML = 'Generating…';
+    exportStatus.innerHTML = '';
+    try {
+      const data = await post('/api/entries/export-pdf', {});
+      const a = document.createElement('a');
+      a.href = data.downloadUrl || data.url;
+      a.download = data.filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      exportStatus.innerHTML = '<span class="text-success small">✓ Report ready. If the download didn\'t start, <a href="' + (data.downloadUrl || data.url) + '">click here</a>.</span>';
+    } catch (err) {
+      exportStatus.innerHTML = '<span class="text-danger small">' + esc(err.message) + '</span>';
+    } finally {
+      exportBtn.innerHTML = oldLabel;
+      exportBtn.disabled = false;
+    }
+  });
+
   await loadHistory();
 });

@@ -40,6 +40,8 @@ Environment="STORAGE_BACKEND=s3"
 Environment="JWT_SECRET=66ljXZ43xGvaQx+yqZd43XDf2NO40HX3VL7e2GRk4ac="
 Environment="S3_BUCKET=diabetescare-resource0622-484504929783-us-east-1-an"
 Environment="CAROUSEL_S3_BUCKET=diabetescare-carousel0622-484504929783-us-east-1-an"
+Environment="PDF_EXPORT_LAMBDA=diabetescare-export"
+Environment="PDF_REPORTS_S3_BUCKET=diabetescare-reports-484504929783-us-east-1-an"
 ExecStart=/home/ec2-user/.local/bin/uvicorn app.main:app --host 0.0.0.0 --port 8000
 Restart=always
 RestartSec=5

@@ -191,6 +191,35 @@ def get_today_entries(user_id: str) -> List[dict]:
     return get_entries(user_id, from_date=today)
 
 
+def get_entries_for_month(user_id: str, month_start: str, month_end: str) -> List[dict]:
+    """Return every entry for a month, paginating through LastEvaluatedKey.
+
+    `month_start` / `month_end` are ISO-ish timestamp bounds used as part of the
+    `ENTRY#{ts}` sort key, e.g. month_start="2026-08-01T00:00:00" and
+    month_end="2026-09-01T00:00:00" captures every entry written in August (UTC).
+    ISO timestamps sort lexicographically, so the BETWEEN key condition is exact.
+    """
+    pk = f"USER#{user_id}"
+    items: List[dict] = []
+    last_key: Optional[dict] = None
+    while True:
+        kwargs: dict = {
+            "KeyConditionExpression": Key("PK").eq(pk)
+            & Key("SK").between(f"ENTRY#{month_start}", f"ENTRY#{month_end}"),
+            "ScanIndexForward": True,
+        }
+        if last_key:
+            kwargs["ExclusiveStartKey"] = last_key
+        resp = _table().query(**kwargs)
+        for it in resp.get("Items", []):
+            if isinstance(it, dict) and it.get("SK", "").startswith("ENTRY#"):
+                items.append(_from_decimal(it))
+        last_key = resp.get("LastEvaluatedKey")
+        if not last_key:
+            break
+    return items
+
+
 def get_latest_entry(user_id: str, entry_type: str):
     pk = f"USER#{user_id}"
     resp = _table().query(

@@ -29,6 +29,13 @@
   </nav>
 
   <div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3" id="exportBar">
+      <div class="d-flex align-items-center gap-2" id="exportStatus"></div>
+      <button class="btn btn-outline-primary btn-sm" id="exportPdfBtn">
+        Export PDF (this month)
+      </button>
+    </div>
+
     <div class="d-flex gap-2 mb-3" id="typeTabs">
       <a href="/static/history.html?type=glucose" class="btn btn-outline-secondary btn-sm type-tab" data-type="glucose">🩸 Glucose</a>
       <a href="/static/history.html?type=meal" class="btn btn-outline-secondary btn-sm type-tab" data-type="meal">🍽️ Meal</a>

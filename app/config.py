@@ -15,6 +15,8 @@ class Settings:
     STORAGE_MAX_SIZE: int = 50 * 1024 * 1024
     S3_BUCKET: str = os.getenv("S3_BUCKET", "diabetescare-resources")
     CAROUSEL_S3_BUCKET: str = os.getenv("CAROUSEL_S3_BUCKET", "diabetescare-carousel")
+    PDF_REPORTS_S3_BUCKET: str = os.getenv("PDF_REPORTS_S3_BUCKET", "diabetescare-reports")
+    PDF_EXPORT_LAMBDA: str = os.getenv("PDF_EXPORT_LAMBDA", "")
 
 
 @lru_cache
