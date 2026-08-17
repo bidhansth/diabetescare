@@ -1,0 +1,15 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "S3ReadWriteResourceBucket",
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject",
+        "s3:PutObject",
+        "s3:HeadObject"
+      ],
+      "Resource": "arn:aws:s3:::diabetescare-resource-484504929783-us-east-1-an/*"
+    }
+  ]
+}
